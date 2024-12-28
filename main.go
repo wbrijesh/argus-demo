@@ -17,8 +17,16 @@ func main() {
 	argusHandler := argus_client.NewArgusHandler(client)
 	logger := slog.New(argusHandler)
 
-	logger.Info("Info Log using slog handler")
-	logger.Error("Error Log using slog handler")
-	logger.Debug("Debug Log using slog handler")
-	logger.Warn("Warn Log using slog handler")
+	defer func() {
+		if r := recover(); r != nil {
+			argusHandler.Flush()
+		}
+	}()
+
+	logger.Info("Info Log using slog handler using buffers")
+	logger.Error("Error Log using slog handler using buffers")
+	logger.Debug("Debug Log using slog handler using buffers")
+	logger.Warn("Warn Log using slog handler using buffers")
+
+	panic("simulated panic")
 }
